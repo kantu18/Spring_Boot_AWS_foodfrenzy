@@ -36,7 +36,7 @@ source:
   location: https://github.com/kantu18/Spring_Boot_AWS_foodfrenzy
   auth:
     type: OAUTH
-    resource: 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
+    resource: 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
   gitCloneDepth: 1
   buildspec: buildspec.yml
   reportBuildStatus: true
