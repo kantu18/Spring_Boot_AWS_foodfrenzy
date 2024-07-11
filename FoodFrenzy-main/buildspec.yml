@@ -4,7 +4,9 @@ phases:
     commands:
       - echo Logging in to Amazon ECR....
       - aws --version
+      #- $(aws ecr get-login --region ap-south-1 --no-include-email)
       - aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 975050343452.dkr.ecr.eu-north-1.amazonaws.com
+      - # Replace with this to your repository URI
       - REPOSITORY_URI=975050343452.dkr.ecr.eu-north-1.amazonaws.com/springboot_foodfrenzy_aws
       - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
   build:
@@ -22,6 +24,7 @@ phases:
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       - echo Writing image definitions file...
+      # Give your container name
       - DOCKER_CONTAINER_NAME=spring-demo-ecr
       - printf '[{"name":"%s","imageUri":"%s"}]' $DOCKER_CONTAINER_NAME $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
       - echo $DOCKER_CONTAINER_NAME
@@ -31,13 +34,3 @@ artifacts:
   files:
     - imagedefinitions.json
     - target/foodfrenzy.jar
-source:
-  type: GITHUB
-  location: https://github.com/kantu18/Spring_Boot_AWS_foodfrenzy
-  auth:
-    type: OAUTH
-    resource: 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
-  gitCloneDepth: 1
-  buildspec: buildspec.yml
-  reportBuildStatus: true
-  sourceVersion: main # Specify the branch name here
